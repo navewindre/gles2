@@ -2,7 +2,7 @@
 #include "gl.h"
 
 
-GL_PROGRAM* gl_2d_init( GL_DATA* gl, VEC2 screensize );
+GL_PROGRAM* gl_2d_init( GL_DATA* gl, VEC2 screensize, const char* shadername );
 
 void gl_polygon( GL_PROGRAM* gl2d, VERTEX* vertices, U32 vertices_count );
 void gl_2d_line( GL_PROGRAM* gl2d, VEC2 start, VEC2 end, CLR col );

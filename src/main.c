@@ -27,8 +27,7 @@ int main() {
 #endif
 
   GL_DATA* gl = gl_init();
-  GL_PROGRAM* gl2d = gl_2d_init( gl, (VEC2){ 480.f, 480.f } );
-  GAME_DATA* game = game_init( gl, gl2d );
+  GAME_DATA* game = game_init( gl );
 
   game_main_loop( game );
 

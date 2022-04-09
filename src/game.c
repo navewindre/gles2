@@ -8,10 +8,12 @@
 #include "game.h"
 #include "math.h"
 
-GAME_DATA* game_init( GL_DATA* gl, GL_PROGRAM* gl2d ) {
+GAME_DATA* game_init( GL_DATA* gl ) {
   GAME_DATA* game = malloc( sizeof( GAME_DATA ) );
   game->gl = gl;
-  game->gl2d = gl2d;
+  
+  game->shaders.gl2d = gl_2d_init( gl, (VEC2){ 480.f, 480.f }, "2d" );
+  game->shaders.gl2d_texcoord = gl_2d_init( gl, (VEC2){ 480.f, 480.f }, "2d_texcoord" );
 
   return game;
 }
@@ -27,7 +29,9 @@ void game_main_loop( GAME_DATA* game ) {
     I64 tick = m_tickcount();  
   
     GL_DATA* gl = game->gl;
-    GL_PROGRAM* gl2d = game->gl2d;
+    GL_PROGRAM* gl2d = game->shaders.gl2d;
+    GL_PROGRAM* gl2d_texcoord = game->shaders.gl2d_texcoord;
+
     gl_beginframe( gl );
 
     VEC2       offset;
@@ -38,8 +42,8 @@ void game_main_loop( GAME_DATA* game ) {
     time( &rawtime );
     tmi = localtime( &rawtime );
     
-    gl_2d_fcircle( gl2d, (VEC2){ 240, 240 }, 150, (CLR){ 255, 255, 255, 255 } );
-    gl_2d_circle( gl2d, (VEC2){ 240, 240 }, 150, (CLR){ 128, 0, 128, 255 } );
+    gl_2d_fcircle( gl2d_texcoord, (VEC2){ 240, 240 }, 150, (CLR){ 255, 255, 255, 255 } );
+    gl_2d_circle( gl2d_texcoord, (VEC2){ 240, 240 }, 150, (CLR){ 128, 0, 128, 255 } );
     render_watch_arm( gl2d, 75 , (F32)( tmi->tm_hour % 12 ) / 12.f, (CLR){ 128, 0, 128, 255 } );
     render_watch_arm( gl2d, 100, (F32)tmi->tm_min / 60.f, (CLR){ 0, 0, 255, 255 } );
     render_watch_arm( gl2d, 125, (F32)( tick % 60000 ) / 60000, (CLR){ 255, 0, 0, 255 } );
