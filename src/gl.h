@@ -7,10 +7,10 @@
 #include "math.h"
 
 typedef struct {
-  U8 r;
-  U8 g;
-  U8 b;
-  U8 a;
+  F32 r;
+  F32 g;
+  F32 b;
+  F32 a;
 } CLR;
 
 typedef struct {

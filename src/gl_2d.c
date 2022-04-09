@@ -26,14 +26,6 @@ void gl_2d_line( GL_PROGRAM* gl2d, VEC2 start, VEC2 end, CLR col ) {
   static const U16 order[] = { 0, 1 };
 
   glUseProgram( gl2d->id );
-
-  static const F32 color_ratio = 1.f / 255.f;
-  F32 fcol[] = {
-    col.r * color_ratio, 
-    col.g * color_ratio, 
-    col.b * color_ratio, 
-    col.a * color_ratio  
-  };
   
   VERTEX vertices[] = {
     { start.x, start.y, 0.f },
@@ -45,7 +37,7 @@ void gl_2d_line( GL_PROGRAM* gl2d, VEC2 start, VEC2 end, CLR col ) {
   glVertexAttribPointer( position, 3, GL_FLOAT, 0, 12, &vertices[0] );
 
   I32 color = glGetUniformLocation( gl2d->id, "vColor" );
-  glUniform4fv( color, 1, fcol ); 
+  glUniform4fv( color, 1, (F32*)&col ); 
 
   glDrawElements( GL_LINES, 2, GL_UNSIGNED_SHORT, order );
 }
@@ -55,14 +47,6 @@ void gl_2d_rect( GL_PROGRAM* gl2d, VEC2 origin, VEC2 dim, CLR col ) {
   
   glUseProgram( gl2d->id );
 
-  static const F32 color_ratio = 1.f / 255.f;
-  F32 fcol[] = {
-    col.r * color_ratio,
-    col.g * color_ratio,
-    col.b * color_ratio,
-    col.a * color_ratio
-  };
-
   VERTEX vertices[] = {
     { origin.x        , origin.y        , 0.f },
     { origin.x + dim.x, origin.y        , 0.f },
@@ -70,14 +54,13 @@ void gl_2d_rect( GL_PROGRAM* gl2d, VEC2 origin, VEC2 dim, CLR col ) {
     { origin.x        , origin.y + dim.y, 0.f },
     { origin.x        , origin.y        , 0.f },
   };
-
  
   I32 position = glGetAttribLocation( gl2d->id, "vPosition" );
   glEnableVertexAttribArray( position );
   glVertexAttribPointer( position, 3, GL_FLOAT, 0, 12, &vertices[0] );
 
   I32 color = glGetUniformLocation( gl2d->id, "vColor" );
-  glUniform4fv( color, 1, fcol ); 
+  glUniform4fv( color, 1, (F32*)&col ); 
 
   glDrawElements( GL_LINE_STRIP, 5, GL_UNSIGNED_SHORT, order ); 
 }
@@ -86,14 +69,6 @@ void gl_2d_frect( GL_PROGRAM* gl2d, VEC2 origin, VEC2 dim, CLR col ) {
   static const U16 order[] = { 0, 1, 2, 3 };
 
   glUseProgram( gl2d->id );
-
-  static const F32 color_ratio = 1.f / 255.f;
-  F32 fcol[] = {
-    col.r * color_ratio,
-    col.g * color_ratio,
-    col.b * color_ratio,
-    col.a * color_ratio
-  };
 
   VERTEX vertices[] = {
     { origin.x,         origin.y        , 0.f },
@@ -118,7 +93,7 @@ void gl_2d_frect( GL_PROGRAM* gl2d, VEC2 origin, VEC2 dim, CLR col ) {
   glVertexAttribPointer( texcoord, 2, GL_FLOAT, 0, 8, &coords[0] );
 
   I32 color = glGetUniformLocation( gl2d->id, "vColor" );
-  glUniform4fv( color, 1, fcol ); 
+  glUniform4fv( color, 1, (F32*)&col ); 
 
   glDrawElements( GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, order ); 
 }
@@ -135,15 +110,7 @@ void gl_2d_circle( GL_PROGRAM* gl2d, VEC2 origin, F32 radius, CLR col ) {
     for( U32 i = 0; i < res + 1; ++i )
       order[i] = i;
   }
-
-  static const F32 color_ratio = 1.f / 255.f;
-  F32 fcol[] = {
-    col.r * color_ratio, 
-    col.g * color_ratio, 
-    col.b * color_ratio, 
-    col.a * color_ratio  
-  };
-  
+ 
   VERTEX vertices[res + 1];
   for( U32 i = 0; i < res + 1; ++i ) {
     VEC2 offset = m_radial_offset( step * ( i == res? 0 : i ), radius );
@@ -160,7 +127,7 @@ void gl_2d_circle( GL_PROGRAM* gl2d, VEC2 origin, F32 radius, CLR col ) {
   glVertexAttribPointer( position, 3, GL_FLOAT, 0, 12, &vertices[0] );
 
   I32 color = glGetUniformLocation( gl2d->id, "vColor" );
-  glUniform4fv( color, 1, fcol ); 
+  glUniform4fv( color, 1, (F32*)&col ); 
 
   glDrawElements( GL_LINE_STRIP, res + 1, GL_UNSIGNED_SHORT, order ); 
 }
@@ -177,14 +144,6 @@ void gl_2d_fcircle( GL_PROGRAM* gl2d, VEC2 origin, F32 radius, CLR col ) {
     for( U32 i = 0; i < res * 2; ++i )
       order[i] = i;
   }
-
-  static const F32 color_ratio = 1.f / 255.f;
-  F32 fcol[] = {
-    col.r * color_ratio, 
-    col.g * color_ratio, 
-    col.b * color_ratio, 
-    col.a * color_ratio 
-  };
   
   VERTEX vertices[res * 2];
   VEC2   coords[res * 2];
@@ -218,7 +177,7 @@ void gl_2d_fcircle( GL_PROGRAM* gl2d, VEC2 origin, F32 radius, CLR col ) {
   glVertexAttribPointer( texcoord, 2, GL_FLOAT, 1, 8, &coords[0].x );
 
   I32 color = glGetUniformLocation( gl2d->id, "vColor" );
-  glUniform4fv( color, 1, fcol ); 
+  glUniform4fv( color, 1, (F32*)&col ); 
 
   glDrawElements( GL_TRIANGLE_STRIP, res + 2, GL_UNSIGNED_SHORT, order ); 
 }

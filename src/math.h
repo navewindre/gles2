@@ -8,10 +8,10 @@
 static const F32 PIRAD = 0.01745329251f;
 static const F32 RADPI = 57.2957795131f;
 
-inline F32 m_deg2rad( float deg ) { return deg * PIRAD; }
-inline F32 m_rad2deg( float rad ) { return rad * RADPI; }
+static inline F32 m_deg2rad( float deg ) { return deg * PIRAD; }
+static inline F32 m_rad2deg( float rad ) { return rad * RADPI; }
 
-inline VEC2 m_radial_offset( float degrees, float distance ) {
+static inline VEC2 m_radial_offset( float degrees, float distance ) {
   F32 rad = m_deg2rad( degrees );
   F32 x = cos( rad );
   F32 y = sin( rad );
@@ -20,7 +20,7 @@ inline VEC2 m_radial_offset( float degrees, float distance ) {
   return ret;
 }
 
-inline I64 m_tickcount() {
+static inline I64 m_tickcount() {
   struct timespec n;
   if( clock_gettime( CLOCK_MONOTONIC, &n ) )
     return 0;

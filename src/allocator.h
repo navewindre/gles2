@@ -4,7 +4,7 @@
 #include <string.h>
 #include "typedef.h"
 
-inline void* array_alloc( U32 size, U32 count ) {
+static inline void* array_alloc( U32 size, U32 count ) {
   return malloc( size * count );
 }
 
@@ -67,7 +67,7 @@ static void* array_push_pos( void** arr, U32 size, U32 count, void* what, U32 wh
   return *arr;
 }
 
-inline void* array_push_last( void** arr, U32 size, U32 count, void* what ) {
+static inline void* array_push_last( void** arr, U32 size, U32 count, void* what ) {
   return array_push_pos( arr, size, count, what, count );
 }
 
