@@ -25,7 +25,7 @@ float mandelbrot( vec2 coord ) {
 }
 
 void main() {
-  vec2 zoom_location = vec2( -0.3757117, 0.301642 ); 
+  vec2 zoom_location = vec2( -0.5, 0.5 ); 
 
   float c = mandelbrot( ( vTexCoord ) * vColor[0] + zoom_location );
   gl_FragColor = vec4( c, c * 0.2, c * c, vColor[3] );
