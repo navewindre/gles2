@@ -4,11 +4,11 @@
 #include <string.h>
 #include "typedef.h"
 
-void* array_alloc( U32 size, U32 count ) {
+inline void* array_alloc( U32 size, U32 count ) {
   return malloc( size * count );
 }
 
-void* array_realloc( void** arr, U32 size, U32 oldcount, U32 newcount ) {
+static void* array_realloc( void** arr, U32 size, U32 oldcount, U32 newcount ) {
   if( oldcount == newcount )
     return *arr;
 
@@ -22,7 +22,7 @@ void* array_realloc( void** arr, U32 size, U32 oldcount, U32 newcount ) {
   return new_block;
 }
 
-void* array_pop_pos( void** arr, U32 size, U32 count, U32 where ) {
+static void* array_pop_pos( void** arr, U32 size, U32 count, U32 where ) {
   if( where >= count )
     return arr;
 
@@ -39,11 +39,11 @@ void* array_pop_pos( void** arr, U32 size, U32 count, U32 where ) {
   return array_realloc( arr, size, count, count - 1 );
 }
 
-void* array_pop_last( void** arr, U32 size, U32 count ) {
+inline void* array_pop_last( void** arr, U32 size, U32 count ) {
   return array_pop_pos( arr, size, count, count - 1 );
 }
 
-void* array_push_pos( void** arr, U32 size, U32 count, void* what, U32 where ) {
+static void* array_push_pos( void** arr, U32 size, U32 count, void* what, U32 where ) {
   if( where > count )
     return 0;
 
@@ -67,11 +67,11 @@ void* array_push_pos( void** arr, U32 size, U32 count, void* what, U32 where ) {
   return *arr;
 }
 
-void* array_push_last( void** arr, U32 size, U32 count, void* what ) {
+inline void* array_push_last( void** arr, U32 size, U32 count, void* what ) {
   return array_push_pos( arr, size, count, what, count );
 }
 
-I32 array_find( void** arr, U32 size, U32 count, void* what ) {
+static I32 array_find( void** arr, U32 size, U32 count, void* what ) {
   for( U32 i = 0; i < count; ++i ) {
     PTR item_ptr = (PTR)(*arr) + i * size;
 
@@ -82,6 +82,7 @@ I32 array_find( void** arr, U32 size, U32 count, void* what ) {
   return -1;
 }
 
+#ifndef ARRAY_DEFINES
 #define array_pop1( _1 )
 #define array_pop2( _1, _2 )
 #define array_pop3( arr, size, count ) array_pop_last( arr, size, count )
@@ -98,3 +99,5 @@ I32 array_find( void** arr, U32 size, U32 count, void* what ) {
 #define array_pop( ... ) array_select( __VA_ARGS__, array_pop1, array_pop2, array_pop3, array_pop4, array_pop5 )
 
 #define array_push( ... ) array_select( __VA_ARGS__, array_push1, array_push2, array_push3, array_push4, array_push5 )
+#define ARRAY_DEFINES
+#endif

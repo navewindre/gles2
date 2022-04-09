@@ -38,6 +38,8 @@ void game_main_loop( GAME_DATA* game ) {
     time( &rawtime );
     tmi = localtime( &rawtime );
     
+    gl_2d_fcircle( gl2d, (VEC2){ 240, 240 }, 150, (CLR){ 255, 255, 255, 255 } );
+    gl_2d_circle( gl2d, (VEC2){ 240, 240 }, 150, (CLR){ 128, 0, 128, 255 } );
     render_watch_arm( gl2d, 75 , (F32)( tmi->tm_hour % 12 ) / 12.f, (CLR){ 128, 0, 128, 255 } );
     render_watch_arm( gl2d, 100, (F32)tmi->tm_min / 60.f, (CLR){ 0, 0, 255, 255 } );
     render_watch_arm( gl2d, 125, (F32)( tick % 60000 ) / 60000, (CLR){ 255, 0, 0, 255 } );
