@@ -84,13 +84,13 @@ void gl_shader_destroy( GL_DATA* gl, GL_SHADER* shader ) {
 
 GL_PROGRAM* gl_program_create( GL_DATA* gl, const char* name ) {
   if( !gl->programs )
-    gl->programs = array_alloc( sizeof( GL_PROGRAM ), 1 );
+    gl->programs = list_alloc( sizeof( GL_PROGRAM ) );
   else {
     I32 count = gl->program_count;
-    array_realloc( &gl->programs, sizeof( GL_PROGRAM ), count, count + 1 );
+    list_insert_after( gl->programs, count );
   }
 
-  GL_PROGRAM* program = &gl->programs[gl->program_count++];
+  GL_PROGRAM* program = list_at( gl->programs, gl->program_count++ );
   char        shader_string[ 256 ];
   char*       shader_code;
 
@@ -158,10 +158,10 @@ void gl_program_destroy( GL_DATA* gl, GL_PROGRAM* program ) {
     return;
   }
 
-  GL_PROGRAM* programs = gl->programs;
-  U32 idx = array_find( &programs, sizeof( GL_PROGRAM ), gl->program_count, program );
+  LIST_ITEM* programs = gl->programs;
+  U32 idx = list_find( programs, program );
   if( idx != -1 )
-    array_pop( arr, sizeof( GL_PROGRAM ), gl->program_count );
+    list_delete_at( programs, gl->program_count );
 }
 
 U8 gl_beginframe( GL_DATA* gl ) {

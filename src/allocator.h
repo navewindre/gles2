@@ -1,8 +1,107 @@
 #pragma once
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "typedef.h"
+
+typedef struct LIST_ITEM {
+  struct LIST_ITEM* rlink;
+  struct LIST_ITEM* flink;
+  void*             it;
+  U32               size;
+} LIST_ITEM;
+
+static inline LIST_ITEM* list_alloc( U32 isize ) {
+  LIST_ITEM* list = (LIST_ITEM*)malloc( sizeof( LIST_ITEM ) );
+  memset( list, 0, sizeof( LIST_ITEM ) );
+  list->it = malloc( isize );
+  list->size = isize;
+
+  return list;
+}
+
+static void* list_at( LIST_ITEM* list, U32 idx ) {
+  LIST_ITEM* it = list;
+  for( U32 i = 0; i < idx; ++i ) {
+    if( !it->flink )
+      return 0;
+
+    it = it->flink;
+  }
+
+  return it->it;
+}
+
+static I32 list_find( LIST_ITEM* list, void* what ) {
+  LIST_ITEM* it;
+  I32         i;
+  for( it = list, i = 0; !!it->flink; it = it->flink, ++i ) {
+    if( !memcmp( it, what, list->size ) )
+      return i;
+  }
+
+  return 0;
+}
+
+static void list_free( LIST_ITEM* list ) {
+  while( !!list ) {
+    LIST_ITEM* next = list->flink;
+    free( list );
+    list = next;
+  }
+}
+
+static void list_delete_at( LIST_ITEM* list, U32 idx ) {
+  LIST_ITEM* it = list;
+  for( U32 i = 0; i < idx; ++i ) {
+    assert( !!it->flink );
+    it = it->flink;
+  }
+
+  if( it->rlink )
+    it->rlink->flink = it->flink;
+
+  if( it->flink )
+    it->flink->rlink = it->rlink;
+}
+
+static LIST_ITEM* list_insert_before( LIST_ITEM* list, U32 idx ) {
+  LIST_ITEM* new_it;
+  LIST_ITEM* it = list;
+  for( U32 i = 0; i < idx; ++i ) {
+    assert( !!it->flink );
+    it = it->flink;
+  }
+
+  new_it = list_alloc( it->size );
+  if( it->rlink ) {
+    it->rlink->flink = new_it;
+    new_it->rlink = it->rlink;
+  }
+
+  new_it->flink = it;
+  it->rlink = new_it;
+  return new_it;
+}
+
+static LIST_ITEM* list_insert_after( LIST_ITEM* list, U32 idx ) {
+  LIST_ITEM* new_it;
+  LIST_ITEM* it = list;
+  for( U32 i = 0; i < idx; ++i )
+    assert( !!it->flink );
+    it = it->flink;
+
+  new_it = list_alloc( it->size );
+  if( it->flink ) {
+    it->flink->rlink = new_it;
+    new_it->flink = it;
+  }
+
+  new_it->rlink = it;
+  it->flink = new_it;
+  return new_it;
+}
 
 static inline void* array_alloc( U32 size, U32 count ) {
   return malloc( size * count );

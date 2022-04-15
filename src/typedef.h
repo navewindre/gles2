@@ -14,3 +14,5 @@ typedef float  F32;
 typedef double F64;
 
 typedef unsigned long PTR;
+
+#define assert( x ) if(!x) printf( "ASSERTION FAILED %s [L: %d %s]\n", __func__, __LINE__, __FILE__ )

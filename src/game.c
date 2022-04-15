@@ -15,8 +15,6 @@ GAME_DATA* game_init( GL_DATA* gl ) {
   game->shaders.gl2d = gl_2d_init( gl, (VEC2){ 480.f, 480.f }, "2d" );
   game->shaders.gl2d_texcoord = gl_2d_init( gl, (VEC2){ 480.f, 480.f }, "2d_texcoord" );
 
-  game->shaders.gl2d = (U8*)(game->shaders.gl2d_texcoord) - sizeof( GL_PROGRAM );
-
   return game;
 }
 

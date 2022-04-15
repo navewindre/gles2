@@ -4,6 +4,7 @@
 #include <SDL_opengles2.h>
 #include <GLES2/gl2.h>
 
+#include "allocator.h"
 #include "math.h"
 
 typedef struct {
@@ -38,7 +39,7 @@ typedef struct {
   SDL_GLContext ctx;
   SDL_Renderer* renderer;
   
-  GL_PROGRAM* programs;
+  LIST_ITEM* programs;
   U32 program_count;
 } GL_DATA;
 
